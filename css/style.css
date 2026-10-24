@@ -1719,3 +1719,16 @@ a {
     }
 
 }
+/* =========================================
+   FIX NIGHT SMILE PHOTO CROP
+========================================= */
+
+.media-card img[src$="01-night-smile.jpg"] {
+
+    object-fit: contain;
+
+    object-position: center center;
+
+    background: #1b1517;
+
+}
