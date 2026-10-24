@@ -1,304 +1,138 @@
-/* =========================================
-   FINAL BIRTHDAY WEBSITE SCRIPT
-   STABILITY / SMOOTHNESS VERSION
-========================================= */
+/* =========================================================
+   FINAL BIRTHDAY WEBSITE
+   COMPLETE SCRIPT.JS
+========================================================= */
+
+"use strict";
 
 
-/* =========================================
+/* =========================================================
+   SHORTCUT
+========================================================= */
+
+function get(id) {
+    return document.getElementById(id);
+}
+
+
+/* =========================================================
    WEBSITE STATE
-========================================= */
+========================================================= */
 
 let giftTwoUnlocked = false;
 let cakeAlreadyCut = false;
-
-let soundMuted = false;
-let storyHasStarted = false;
 
 let giftOneOpening = false;
 let giftTwoOpening = false;
 let leavingCake = false;
 
-let currentAudio = null;
-let currentAudioPath = null;
+let storyHasStarted = false;
+let soundMuted = false;
+
+let currentStoryAudio = null;
+let currentStoryTrack = null;
 
 let desiredStoryTrack =
     "assets/audio/01-dreamy.mp3";
 
-let storySwitchVersion = 0;
+let trackRequestNumber = 0;
 
+let storyObserverPaused = false;
 let storyTrackTimer = null;
 
-let suppressMusicObserver = false;
+
+/* =========================================================
+   MAIN SCREENS
+========================================================= */
+
+const welcomeScreen = get("welcomeScreen");
+const penguinScreen = get("penguinScreen");
+const cakeScreen = get("cakeScreen");
+const storyScreen = get("storyScreen");
 
 
-/* =========================================
-   AUDIO FADE TOKENS
-========================================= */
+/* =========================================================
+   MAIN BUTTONS
+========================================================= */
 
-const fadeTokens =
-    new WeakMap();
+const startButton = get("startButton");
+
+const giftOneButton = get("giftOneButton");
+const giftTwoButton = get("giftTwoButton");
+
+const giftTwoLock = get("giftTwoLock");
+const penguinTwoText = get("penguinTwoText");
 
 
-/* =========================================
-   CAKE BACKGROUND MUSIC
+/* =========================================================
+   CAKE ELEMENTS
+========================================================= */
 
-   THIS IS THE ONLY AUDIO ALLOWED
-   WHILE THE CAKE SCREEN IS OPEN
-========================================= */
+const cakeImage = get("cakeImage");
 
-const cakeBackgroundAudio =
+const cakeSlider = get("cakeSlider");
+const cakeCutArea = get("cakeCutArea");
+
+const cakeAfterCut = get("cakeAfterCut");
+const cakeFinish = get("cakeFinish");
+
+const nomNomButton = get("nomNomButton");
+
+const backToPenguinsButton =
+    get("backToPenguinsButton");
+
+
+/* =========================================================
+   STORY ELEMENTS
+========================================================= */
+
+const soundToggle = get("soundToggle");
+const soundText = get("soundText");
+const soundIcon = get("soundIcon");
+
+const celebrateButton =
+    get("celebrateButton");
+
+const restartStoryButton =
+    get("restartStoryButton");
+
+
+/* =========================================================
+   CAKE HAPPY BIRTHDAY MUSIC
+========================================================= */
+
+const cakeMusic =
     new Audio(
         "assets/audio/cake-birthday-bg.mp3"
     );
 
-cakeBackgroundAudio.loop = true;
-cakeBackgroundAudio.preload = "auto";
-cakeBackgroundAudio.volume = 0;
+cakeMusic.loop = true;
+cakeMusic.preload = "auto";
+cakeMusic.volume = 0;
 
 
-/* =========================================
-   SCREENS
-========================================= */
+/* =========================================================
+   AUDIO FADE CONTROL
+========================================================= */
 
-const welcomeScreen =
-    document.getElementById(
-        "welcomeScreen"
-    );
+const audioFadeTokens =
+    new WeakMap();
 
-const penguinScreen =
-    document.getElementById(
-        "penguinScreen"
-    );
-
-const cakeScreen =
-    document.getElementById(
-        "cakeScreen"
-    );
-
-const storyScreen =
-    document.getElementById(
-        "storyScreen"
-    );
-
-
-/* =========================================
-   MAIN ELEMENTS
-========================================= */
-
-const startButton =
-    document.getElementById(
-        "startButton"
-    );
-
-const giftOneButton =
-    document.getElementById(
-        "giftOneButton"
-    );
-
-const giftTwoButton =
-    document.getElementById(
-        "giftTwoButton"
-    );
-
-const giftTwoLock =
-    document.getElementById(
-        "giftTwoLock"
-    );
-
-const penguinTwoText =
-    document.getElementById(
-        "penguinTwoText"
-    );
-
-
-/* =========================================
-   CAKE ELEMENTS
-========================================= */
-
-const cakeImage =
-    document.getElementById(
-        "cakeImage"
-    );
-
-const cakeSlider =
-    document.getElementById(
-        "cakeSlider"
-    );
-
-const cakeCutArea =
-    document.getElementById(
-        "cakeCutArea"
-    );
-
-const cakeAfterCut =
-    document.getElementById(
-        "cakeAfterCut"
-    );
-
-const cakeFinish =
-    document.getElementById(
-        "cakeFinish"
-    );
-
-const nomNomButton =
-    document.getElementById(
-        "nomNomButton"
-    );
-
-const backToPenguinsButton =
-    document.getElementById(
-        "backToPenguinsButton"
-    );
-
-
-/* =========================================
-   STORY ELEMENTS
-========================================= */
-
-const soundToggle =
-    document.getElementById(
-        "soundToggle"
-    );
-
-const soundText =
-    document.getElementById(
-        "soundText"
-    );
-
-const soundIcon =
-    document.getElementById(
-        "soundIcon"
-    );
-
-const celebrateButton =
-    document.getElementById(
-        "celebrateButton"
-    );
-
-const restartStoryButton =
-    document.getElementById(
-        "restartStoryButton"
-    );
-
-
-/* =========================================
-   ACTIVE SOUND EFFECTS
-========================================= */
-
-const activeSoundEffects =
-    new Set();
-
-
-/* =========================================
-   CHECK WHICH SCREEN IS ACTIVE
-========================================= */
-
-function isCakePageOpen() {
-
-    return !cakeScreen.classList.contains(
-        "hidden"
-    );
-
-}
-
-
-function isStoryOpen() {
-
-    return !storyScreen.classList.contains(
-        "hidden"
-    );
-
-}
-
-
-/* =========================================
-   HIDE ALL MAIN SCREENS
-========================================= */
-
-function hideMainScreens() {
-
-    welcomeScreen.classList.add(
-        "hidden"
-    );
-
-    penguinScreen.classList.add(
-        "hidden"
-    );
-
-    cakeScreen.classList.add(
-        "hidden"
-    );
-
-    storyScreen.classList.add(
-        "hidden"
-    );
-
-}
-
-
-/* =========================================
-   SMOOTH SCREEN ENTRANCE
-========================================= */
-
-function animateScreenIn(
-    element
-) {
-
-    element.animate(
-
-        [
-            {
-                opacity: 0,
-
-                transform:
-                    "translateY(8px)"
-            },
-
-            {
-                opacity: 1,
-
-                transform:
-                    "translateY(0)"
-            }
-        ],
-
-        {
-            duration: 450,
-
-            easing:
-                "cubic-bezier(.2,.8,.2,1)"
-        }
-
-    );
-
-}
-
-
-/* =========================================
-   PROFESSIONAL AUDIO FADE
-========================================= */
 
 function fadeAudio(
     audio,
-    endVolume,
+    targetVolume,
     duration,
-    callback
+    finished
 ) {
 
-    if (
-        !audio
-    ) {
+    if (!audio) {
 
-        if (
-            callback
-        ) {
-
-            callback();
-
+        if (finished) {
+            finished();
         }
 
         return;
-
     }
 
 
@@ -310,7 +144,7 @@ function fadeAudio(
         Symbol();
 
 
-    fadeTokens.set(
+    audioFadeTokens.set(
         audio,
         token
     );
@@ -320,36 +154,30 @@ function fadeAudio(
         performance.now();
 
 
-    function update(
-        time
-    ) {
+    function frame(time) {
 
         if (
-            fadeTokens.get(
-                audio
-            )
+            audioFadeTokens.get(audio)
             !==
             token
         ) {
 
             return;
-
         }
 
 
         const progress =
             Math.min(
                 1,
-
-                (
-                    time
-                    -
-                    startTime
-                )
+                (time - startTime)
                 /
                 duration
             );
 
+
+        /*
+        SMOOTH STEP
+        */
 
         const eased =
             progress
@@ -369,7 +197,7 @@ function fadeAudio(
             startVolume
             +
             (
-                endVolume
+                targetVolume
                 -
                 startVolume
             )
@@ -380,7 +208,6 @@ function fadeAudio(
         volume =
             Math.max(
                 0,
-
                 Math.min(
                     1,
                     volume
@@ -397,23 +224,20 @@ function fadeAudio(
         ) {
 
             requestAnimationFrame(
-                update
+                frame
             );
 
             return;
-
         }
 
 
         audio.volume =
-            endVolume;
+            targetVolume;
 
 
-        if (
-            callback
-        ) {
+        if (finished) {
 
-            callback();
+            finished();
 
         }
 
@@ -421,44 +245,139 @@ function fadeAudio(
 
 
     requestAnimationFrame(
-        update
+        frame
     );
-
 }
 
 
-/* =========================================
-   NORMAL SOUND EFFECTS
-========================================= */
+/* =========================================================
+   SCREEN CHECKS
+========================================================= */
+
+function isCakeOpen() {
+
+    return (
+        cakeScreen
+        &&
+        !cakeScreen.classList.contains(
+            "hidden"
+        )
+    );
+}
+
+
+function isStoryOpen() {
+
+    return (
+        storyScreen
+        &&
+        !storyScreen.classList.contains(
+            "hidden"
+        )
+    );
+}
+
+
+/* =========================================================
+   HIDE MAIN SCREENS
+========================================================= */
+
+function hideMainScreens() {
+
+    welcomeScreen.classList.add(
+        "hidden"
+    );
+
+    penguinScreen.classList.add(
+        "hidden"
+    );
+
+    cakeScreen.classList.add(
+        "hidden"
+    );
+
+    storyScreen.classList.add(
+        "hidden"
+    );
+}
+
+
+/* =========================================================
+   SCREEN FADE-IN
+========================================================= */
+
+function animateScreenIn(element) {
+
+    if (!element) {
+        return;
+    }
+
+
+    element.animate(
+
+        [
+            {
+                opacity: 0,
+                transform:
+                    "translateY(8px)"
+            },
+
+            {
+                opacity: 1,
+                transform:
+                    "translateY(0)"
+            }
+        ],
+
+        {
+            duration: 450,
+
+            easing:
+                "cubic-bezier(.2,.8,.2,1)"
+        }
+
+    );
+}
+
+
+/* =========================================================
+   SOUND EFFECTS
+========================================================= */
+
+const activeSoundEffects =
+    new Set();
+
 
 function playSfx(
     path,
-    volume = 0.4
+    volume = 0.35
 ) {
+
+    /*
+    CAKE PAGE MUST HAVE
+    ONLY HAPPY BIRTHDAY MUSIC.
+    */
 
     if (
         soundMuted
         ||
-        isCakePageOpen()
+        isCakeOpen()
     ) {
 
         return null;
-
     }
 
 
     const audio =
-        new Audio(
-            path
-        );
-
-
-    audio.preload =
-        "auto";
+        new Audio(path);
 
 
     audio.volume =
         volume;
+
+
+    audio.preload =
+        "auto";
 
 
     activeSoundEffects.add(
@@ -466,22 +385,22 @@ function playSfx(
     );
 
 
-    const removeAudio =
+    audio.addEventListener(
+
+        "ended",
+
         function () {
 
             activeSoundEffects.delete(
                 audio
             );
 
-        };
+        },
 
-
-    audio.addEventListener(
-        "ended",
-        removeAudio,
         {
             once: true
         }
+
     );
 
 
@@ -489,30 +408,29 @@ function playSfx(
         .catch(
             function () {
 
-                removeAudio();
+                activeSoundEffects.delete(
+                    audio
+                );
 
             }
         );
 
 
     return audio;
-
 }
 
 
-/* =========================================
-   FADE OUT ALL SOUND EFFECTS
-========================================= */
+/* =========================================================
+   STOP SOUND EFFECTS
+========================================================= */
 
-function fadeOutAllSfx(
+function stopAllSoundEffects(
     duration = 200
 ) {
 
     activeSoundEffects.forEach(
 
-        function (
-            audio
-        ) {
+        function (audio) {
 
             fadeAudio(
 
@@ -526,9 +444,7 @@ function fadeOutAllSfx(
 
                     audio.pause();
 
-                    audio.currentTime =
-                        0;
-
+                    audio.currentTime = 0;
 
                     activeSoundEffects.delete(
                         audio
@@ -541,57 +457,60 @@ function fadeOutAllSfx(
         }
 
     );
-
 }
 
 
-/* =========================================
-   STANDARD BUTTON CLICK SOUND
-========================================= */
+/* =========================================================
+   GENERAL CLICK SOUND
+========================================================= */
 
 document.addEventListener(
-    "click",
-    function (
-        event
-    ) {
 
-        if (
-            isCakePageOpen()
-        ) {
+    "click",
+
+    function (event) {
+
+        /*
+        NO CLICK SOUNDS ON CAKE PAGE
+        */
+
+        if (isCakeOpen()) {
 
             return;
 
         }
 
 
-        const target =
+        const button =
             event.target.closest(
                 "button, .story-start-button"
             );
 
 
-        if (
-            !target
-        ) {
+        if (!button) {
 
             return;
 
         }
 
 
-        const excludedIds =
+        /*
+        THESE HAVE THEIR OWN
+        SPECIAL SOUND / BEHAVIOUR
+        */
+
+        const specialButtons =
             [
                 "giftOneButton",
                 "giftTwoButton",
                 "backToPenguinsButton",
-                "soundToggle",
-                "celebrateButton"
+                "soundToggle"
             ];
 
 
         if (
-            excludedIds.includes(
-                target.id
+            specialButtons.includes(
+                button.id
             )
         ) {
 
@@ -606,163 +525,18 @@ document.addEventListener(
         );
 
     }
+
 );
 
 
-/* =========================================
-   START CAKE MUSIC
-========================================= */
-
-function startCakeMusic() {
-
-    storySwitchVersion++;
-
-
-    if (
-        currentAudio
-    ) {
-
-        currentAudio.pause();
-
-        currentAudio.currentTime =
-            0;
-
-        currentAudio =
-            null;
-
-        currentAudioPath =
-            null;
-
-    }
-
-
-    activeSoundEffects.forEach(
-
-        function (
-            audio
-        ) {
-
-            audio.pause();
-
-            audio.currentTime =
-                0;
-
-        }
-
-    );
-
-
-    activeSoundEffects.clear();
-
-
-    if (
-        soundMuted
-    ) {
-
-        return;
-
-    }
-
-
-    cakeBackgroundAudio.pause();
-
-    cakeBackgroundAudio.currentTime =
-        0;
-
-    cakeBackgroundAudio.volume =
-        0;
-
-
-    cakeBackgroundAudio.play()
-        .then(
-            function () {
-
-                fadeAudio(
-
-                    cakeBackgroundAudio,
-
-                    0.36,
-
-                    1400
-
-                );
-
-            }
-        )
-        .catch(
-            function () {}
-        );
-
-}
-
-
-/* =========================================
-   STOP CAKE MUSIC
-========================================= */
-
-function stopCakeMusic(
-    callback
-) {
-
-    if (
-        cakeBackgroundAudio.paused
-    ) {
-
-        cakeBackgroundAudio.currentTime =
-            0;
-
-
-        if (
-            callback
-        ) {
-
-            callback();
-
-        }
-
-
-        return;
-
-    }
-
-
-    fadeAudio(
-
-        cakeBackgroundAudio,
-
-        0,
-
-        1000,
-
-        function () {
-
-            cakeBackgroundAudio.pause();
-
-            cakeBackgroundAudio.currentTime =
-                0;
-
-
-            if (
-                callback
-            ) {
-
-                callback();
-
-            }
-
-        }
-
-    );
-
-}
-
-
-/* =========================================
-   TAP TO BEGIN
-========================================= */
+/* =========================================================
+   START
+========================================================= */
 
 startButton.addEventListener(
+
     "click",
+
     function () {
 
         hideMainScreens();
@@ -784,28 +558,160 @@ startButton.addEventListener(
         );
 
     }
+
 );
 
 
-/* =========================================
-   OPEN GIFT 1
-========================================= */
+/* =========================================================
+   START CAKE MUSIC
+========================================================= */
 
-giftOneButton.addEventListener(
-    "click",
-    function () {
+function startCakeMusic() {
 
-        if (
-            giftOneOpening
-        ) {
+    /*
+    STORY MUSIC MUST STOP.
+    */
 
-            return;
+    trackRequestNumber++;
+
+
+    if (currentStoryAudio) {
+
+        currentStoryAudio.pause();
+
+        currentStoryAudio.currentTime =
+            0;
+
+        currentStoryAudio =
+            null;
+
+        currentStoryTrack =
+            null;
+
+    }
+
+
+    /*
+    OTHER SFX MUST STOP.
+    */
+
+    activeSoundEffects.forEach(
+
+        function (audio) {
+
+            audio.pause();
+
+            audio.currentTime = 0;
 
         }
 
+    );
 
-        giftOneOpening =
-            true;
+
+    activeSoundEffects.clear();
+
+
+    if (soundMuted) {
+
+        return;
+    }
+
+
+    cakeMusic.pause();
+
+    cakeMusic.currentTime = 0;
+
+    cakeMusic.volume = 0;
+
+
+    cakeMusic.play()
+        .then(
+            function () {
+
+                fadeAudio(
+
+                    cakeMusic,
+
+                    0.36,
+
+                    1400
+
+                );
+
+            }
+        )
+        .catch(
+            function () {}
+        );
+}
+
+
+/* =========================================================
+   STOP CAKE MUSIC
+========================================================= */
+
+function stopCakeMusic(done) {
+
+    if (cakeMusic.paused) {
+
+        cakeMusic.currentTime =
+            0;
+
+
+        if (done) {
+            done();
+        }
+
+
+        return;
+    }
+
+
+    fadeAudio(
+
+        cakeMusic,
+
+        0,
+
+        1000,
+
+        function () {
+
+            cakeMusic.pause();
+
+            cakeMusic.currentTime =
+                0;
+
+
+            if (done) {
+
+                done();
+
+            }
+
+        }
+
+    );
+}
+
+
+/* =========================================================
+   GIFT 1
+========================================================= */
+
+giftOneButton.addEventListener(
+
+    "click",
+
+    function () {
+
+        if (giftOneOpening) {
+
+            return;
+        }
+
+
+        giftOneOpening = true;
 
 
         playSfx(
@@ -848,11 +754,16 @@ giftOneButton.addEventListener(
         );
 
 
+        /*
+        FADE GIFT SOUND BEFORE
+        ENTERING CAKE PAGE.
+        */
+
         setTimeout(
 
             function () {
 
-                fadeOutAllSfx(
+                stopAllSoundEffects(
                     180
                 );
 
@@ -886,11 +797,16 @@ giftOneButton.addEventListener(
                 );
 
 
+                /*
+                FROM HERE UNTIL THE
+                CAKE PAGE ENDS,
+                ONLY THIS MUSIC PLAYS.
+                */
+
                 startCakeMusic();
 
 
-                giftOneOpening =
-                    false;
+                giftOneOpening = false;
 
             },
 
@@ -899,30 +815,27 @@ giftOneButton.addEventListener(
         );
 
     }
+
 );
 
 
-/* =========================================
-   CAKE CONFETTI
-========================================= */
+/* =========================================================
+   FIXED-SCREEN CAKE CONFETTI
+
+   VISUAL ONLY
+========================================================= */
 
 function createCakeConfetti() {
 
-    cakeScreen.style.position =
-        "relative";
-
-
-    const oldLayer =
-        cakeScreen.querySelector(
-            ".cake-confetti-layer"
+    const old =
+        document.querySelector(
+            ".cake-fixed-confetti"
         );
 
 
-    if (
-        oldLayer
-    ) {
+    if (old) {
 
-        oldLayer.remove();
+        old.remove();
 
     }
 
@@ -934,29 +847,50 @@ function createCakeConfetti() {
 
 
     layer.className =
-        "confetti-container cake-confetti-layer";
+        "cake-fixed-confetti";
 
 
-    cakeScreen.appendChild(
+    layer.style.position =
+        "fixed";
+
+    layer.style.inset =
+        "0";
+
+    layer.style.width =
+        "100vw";
+
+    layer.style.height =
+        "100vh";
+
+    layer.style.pointerEvents =
+        "none";
+
+    layer.style.overflow =
+        "hidden";
+
+    layer.style.zIndex =
+        "99990";
+
+
+    document.body.appendChild(
         layer
     );
 
 
-    const colours =
+    const colors =
         [
             "#f4c5d0",
             "#ffffff",
             "#e1bc80",
             "#c47789",
             "#ffd8e0",
-            "#f2b8c6",
             "#f6dd9b"
         ];
 
 
     for (
         let i = 0;
-        i < 90;
+        i < 85;
         i++
     ) {
 
@@ -966,8 +900,20 @@ function createCakeConfetti() {
             );
 
 
-        piece.className =
-            "confetti-piece";
+        const size =
+            5
+            +
+            Math.random()
+            *
+            7;
+
+
+        piece.style.position =
+            "absolute";
+
+
+        piece.style.top =
+            "-25px";
 
 
         piece.style.left =
@@ -978,40 +924,101 @@ function createCakeConfetti() {
             "%";
 
 
+        piece.style.width =
+            size
+            +
+            "px";
+
+
+        piece.style.height =
+            size
+            *
+            1.5
+            +
+            "px";
+
+
         piece.style.background =
-            colours[
+            colors[
                 Math.floor(
                     Math.random()
                     *
-                    colours.length
+                    colors.length
                 )
             ];
 
 
-        piece.style.animationDuration =
-            (
-                2.8
-                +
-                Math.random()
-                *
-                2.3
-            )
-            +
-            "s";
+        piece.style.borderRadius =
+            Math.random() > 0.5
+                ?
+                "2px"
+                :
+                "50%";
 
 
-        piece.style.animationDelay =
-            (
-                Math.random()
-                *
-                0.6
-            )
+        piece.style.opacity =
+            0.7
             +
-            "s";
+            Math.random()
+            *
+            0.3;
 
 
         layer.appendChild(
             piece
+        );
+
+
+        const drift =
+            -80
+            +
+            Math.random()
+            *
+            160;
+
+
+        const rotation =
+            500
+            +
+            Math.random()
+            *
+            800;
+
+
+        piece.animate(
+
+            [
+                {
+                    transform:
+                        "translate3d(0,-30px,0) rotate(0deg)"
+                },
+
+                {
+                    transform:
+                        `translate3d(${drift}px,110vh,0) rotate(${rotation}deg)`
+                }
+            ],
+
+            {
+                duration:
+                    2600
+                    +
+                    Math.random()
+                    *
+                    2400,
+
+                delay:
+                    Math.random()
+                    *
+                    500,
+
+                easing:
+                    "linear",
+
+                fill:
+                    "forwards"
+            }
+
         );
 
     }
@@ -1021,9 +1028,7 @@ function createCakeConfetti() {
 
         function () {
 
-            if (
-                layer.isConnected
-            ) {
+            if (layer.isConnected) {
 
                 layer.remove();
 
@@ -1031,19 +1036,20 @@ function createCakeConfetti() {
 
         },
 
-        5500
+        5600
 
     );
-
 }
 
 
-/* =========================================
+/* =========================================================
    CUT CAKE
-========================================= */
+========================================================= */
 
 cakeSlider.addEventListener(
+
     "input",
+
     function () {
 
         const value =
@@ -1059,13 +1065,16 @@ cakeSlider.addEventListener(
         ) {
 
             return;
-
         }
 
 
-        cakeAlreadyCut =
-            true;
+        cakeAlreadyCut = true;
 
+
+        /*
+        ONLY VISUAL CONFETTI.
+        NO EXTRA AUDIO.
+        */
 
         createCakeConfetti();
 
@@ -1113,6 +1122,11 @@ cakeSlider.addEventListener(
         );
 
 
+        /*
+        SLICE APPEARS AFTER
+        A SMALL PAUSE.
+        */
+
         setTimeout(
 
             function () {
@@ -1128,9 +1142,7 @@ cakeSlider.addEventListener(
                     );
 
 
-                if (
-                    slice
-                ) {
+                if (slice) {
 
                     slice.animate(
 
@@ -1175,15 +1187,18 @@ cakeSlider.addEventListener(
         );
 
     }
+
 );
 
 
-/* =========================================
+/* =========================================================
    NOM NOM
-========================================= */
+========================================================= */
 
 nomNomButton.addEventListener(
+
     "click",
+
     function () {
 
         cakeAfterCut.classList.add(
@@ -1224,29 +1239,33 @@ nomNomButton.addEventListener(
         );
 
     }
+
 );
 
 
-/* =========================================
+/* =========================================================
    RETURN TO PENGUINS
-========================================= */
+========================================================= */
 
 backToPenguinsButton.addEventListener(
+
     "click",
+
     function () {
 
-        if (
-            leavingCake
-        ) {
+        if (leavingCake) {
 
             return;
-
         }
 
 
-        leavingCake =
-            true;
+        leavingCake = true;
 
+
+        /*
+        FADE MUSIC BEFORE
+        LEAVING CAKE PAGE.
+        */
 
         stopCakeMusic(
 
@@ -1344,27 +1363,35 @@ backToPenguinsButton.addEventListener(
                 );
 
 
-                leavingCake =
-                    false;
+                leavingCake = false;
 
             }
 
         );
 
     }
+
 );
 
 
-/* =========================================
-   CLICK GIFT 2
-========================================= */
+/* =========================================================
+   GIFT 2
+========================================================= */
 
 giftTwoButton.addEventListener(
+
     "click",
+
     function () {
 
+        /*
+        STILL LOCKED
+        */
+
         if (
-            giftTwoUnlocked === false
+            giftTwoUnlocked
+            ===
+            false
         ) {
 
             penguinTwoText.innerHTML =
@@ -1435,21 +1462,20 @@ giftTwoButton.addEventListener(
 
 
             return;
-
         }
 
 
-        if (
-            giftTwoOpening
-        ) {
+        /*
+        PREVENT DOUBLE CLICK
+        */
+
+        if (giftTwoOpening) {
 
             return;
-
         }
 
 
-        giftTwoOpening =
-            true;
+        giftTwoOpening = true;
 
 
         playSfx(
@@ -1491,13 +1517,13 @@ giftTwoButton.addEventListener(
 
             function () {
 
-                fadeOutAllSfx(
-                    650
+                stopAllSoundEffects(
+                    500
                 );
 
             },
 
-            250
+            260
 
         );
 
@@ -1508,33 +1534,36 @@ giftTwoButton.addEventListener(
 
                 openStory();
 
-
                 giftTwoOpening =
                     false;
 
             },
 
-            520
+            540
 
         );
 
     }
+
 );
 
 
-/* =========================================
+/* =========================================================
    OPEN STORY
-========================================= */
+========================================================= */
 
 function openStory() {
 
-    cakeBackgroundAudio.pause();
+    /*
+    GUARANTEE CAKE MUSIC
+    IS COMPLETELY OFF.
+    */
 
-    cakeBackgroundAudio.currentTime =
-        0;
+    cakeMusic.pause();
 
-    cakeBackgroundAudio.volume =
-        0;
+    cakeMusic.currentTime = 0;
+
+    cakeMusic.volume = 0;
 
 
     hideMainScreens();
@@ -1555,8 +1584,7 @@ function openStory() {
     );
 
 
-    storyHasStarted =
-        true;
+    storyHasStarted = true;
 
 
     desiredStoryTrack =
@@ -1569,11 +1597,16 @@ function openStory() {
     );
 
 
+    /*
+    SMALL TRANSITION GAP
+    BEFORE STORY MUSIC.
+    */
+
     setTimeout(
 
         function () {
 
-            switchMusic(
+            switchStoryMusic(
                 desiredStoryTrack
             );
 
@@ -1586,25 +1619,24 @@ function openStory() {
 
     setTimeout(
 
-        activateVisibleReveals,
+        revealVisibleItems,
 
         200
 
     );
-
 }
 
 
-/* =========================================
-   STORY MUSIC CROSSFADE
-========================================= */
+/* =========================================================
+   STORY MUSIC
+========================================================= */
 
-function switchMusic(
-    newPath
+function switchStoryMusic(
+    path
 ) {
 
     desiredStoryTrack =
-        newPath;
+        path;
 
 
     if (
@@ -1616,37 +1648,40 @@ function switchMusic(
     ) {
 
         return;
-
     }
 
 
+    /*
+    SAME TRACK
+    */
+
     if (
-        currentAudio
+        currentStoryAudio
         &&
-        currentAudioPath
+        currentStoryTrack
         ===
-        newPath
+        path
     ) {
 
         if (
-            currentAudio.paused
+            currentStoryAudio.paused
         ) {
 
-            currentAudio.volume =
+            currentStoryAudio.volume =
                 0;
 
 
-            currentAudio.play()
+            currentStoryAudio.play()
                 .then(
                     function () {
 
                         fadeAudio(
 
-                            currentAudio,
+                            currentStoryAudio,
 
                             0.42,
 
-                            900
+                            800
 
                         );
 
@@ -1660,44 +1695,41 @@ function switchMusic(
 
 
         return;
-
     }
 
 
-    const oldAudio =
-        currentAudio;
+    const previousAudio =
+        currentStoryAudio;
 
 
     const nextAudio =
-        new Audio(
-            newPath
-        );
+        new Audio(path);
 
 
-    nextAudio.loop =
-        true;
-
+    nextAudio.loop = true;
 
     nextAudio.preload =
         "auto";
 
-
-    nextAudio.volume =
-        0;
+    nextAudio.volume = 0;
 
 
-    const version =
-        ++storySwitchVersion;
+    const request =
+        ++trackRequestNumber;
 
 
     nextAudio.play()
         .then(
             function () {
 
+                /*
+                IGNORE STALE TRACK REQUEST
+                */
+
                 if (
-                    version
+                    request
                     !==
-                    storySwitchVersion
+                    trackRequestNumber
                     ||
                     soundMuted
                     ||
@@ -1710,17 +1742,20 @@ function switchMusic(
                         0;
 
                     return;
-
                 }
 
 
-                currentAudio =
+                currentStoryAudio =
                     nextAudio;
 
 
-                currentAudioPath =
-                    newPath;
+                currentStoryTrack =
+                    path;
 
+
+                /*
+                NEW TRACK FADE IN
+                */
 
                 fadeAudio(
 
@@ -1728,22 +1763,26 @@ function switchMusic(
 
                     0.42,
 
-                    1550
+                    1600
 
                 );
 
 
+                /*
+                OLD TRACK FADE OUT
+                */
+
                 if (
-                    oldAudio
+                    previousAudio
                     &&
-                    oldAudio
+                    previousAudio
                     !==
                     nextAudio
                 ) {
 
                     fadeAudio(
 
-                        oldAudio,
+                        previousAudio,
 
                         0,
 
@@ -1752,14 +1791,14 @@ function switchMusic(
                         function () {
 
                             if (
-                                oldAudio
+                                previousAudio
                                 !==
-                                currentAudio
+                                currentStoryAudio
                             ) {
 
-                                oldAudio.pause();
+                                previousAudio.pause();
 
-                                oldAudio.currentTime =
+                                previousAudio.currentTime =
                                     0;
 
                             }
@@ -1775,13 +1814,12 @@ function switchMusic(
         .catch(
             function () {}
         );
-
 }
 
 
-/* =========================================
+/* =========================================================
    STORY MUSIC OBSERVER
-========================================= */
+========================================================= */
 
 const musicSections =
     document.querySelectorAll(
@@ -1795,9 +1833,7 @@ const sectionVisibility =
 
 musicSections.forEach(
 
-    function (
-        section
-    ) {
+    function (section) {
 
         sectionVisibility.set(
             section,
@@ -1809,10 +1845,10 @@ musicSections.forEach(
 );
 
 
-function chooseMostVisibleTrack() {
+function selectVisibleStoryTrack() {
 
     if (
-        suppressMusicObserver
+        storyObserverPaused
         ||
         !storyHasStarted
         ||
@@ -1820,33 +1856,28 @@ function chooseMostVisibleTrack() {
     ) {
 
         return;
-
     }
 
 
-    let bestSection =
-        null;
-
-
-    let bestRatio =
-        0;
+    let bestSection = null;
+    let bestVisibility = 0;
 
 
     sectionVisibility.forEach(
 
         function (
-            ratio,
+            visibility,
             section
         ) {
 
             if (
-                ratio
+                visibility
                 >
-                bestRatio
+                bestVisibility
             ) {
 
-                bestRatio =
-                    ratio;
+                bestVisibility =
+                    visibility;
 
 
                 bestSection =
@@ -1862,11 +1893,10 @@ function chooseMostVisibleTrack() {
     if (
         !bestSection
         ||
-        bestRatio < 0.20
+        bestVisibility < 0.20
     ) {
 
         return;
-
     }
 
 
@@ -1874,12 +1904,9 @@ function chooseMostVisibleTrack() {
         bestSection.dataset.track;
 
 
-    if (
-        !track
-    ) {
+    if (!track) {
 
         return;
-
     }
 
 
@@ -1897,7 +1924,7 @@ function chooseMostVisibleTrack() {
 
             function () {
 
-                switchMusic(
+                switchStoryMusic(
                     track
                 );
 
@@ -1906,22 +1933,17 @@ function chooseMostVisibleTrack() {
             180
 
         );
-
 }
 
 
 const musicObserver =
     new IntersectionObserver(
 
-        function (
-            entries
-        ) {
+        function (entries) {
 
             entries.forEach(
 
-                function (
-                    entry
-                ) {
+                function (entry) {
 
                     sectionVisibility.set(
 
@@ -1940,7 +1962,7 @@ const musicObserver =
             );
 
 
-            chooseMostVisibleTrack();
+            selectVisibleStoryTrack();
 
         },
 
@@ -1961,9 +1983,7 @@ const musicObserver =
 
 musicSections.forEach(
 
-    function (
-        section
-    ) {
+    function (section) {
 
         musicObserver.observe(
             section
@@ -1974,21 +1994,21 @@ musicSections.forEach(
 );
 
 
-/* =========================================
+/* =========================================================
    SOUND TOGGLE
-========================================= */
+========================================================= */
 
 soundToggle.addEventListener(
+
     "click",
+
     function () {
 
         soundMuted =
             !soundMuted;
 
 
-        if (
-            soundMuted
-        ) {
+        if (soundMuted) {
 
             soundText.textContent =
                 "Sound Off";
@@ -1998,18 +2018,18 @@ soundToggle.addEventListener(
                 "×";
 
 
-            storySwitchVersion++;
+            trackRequestNumber++;
 
 
             if (
-                currentAudio
+                currentStoryAudio
                 &&
-                !currentAudio.paused
+                !currentStoryAudio.paused
             ) {
 
                 fadeAudio(
 
-                    currentAudio,
+                    currentStoryAudio,
 
                     0,
 
@@ -2017,7 +2037,7 @@ soundToggle.addEventListener(
 
                     function () {
 
-                        currentAudio.pause();
+                        currentStoryAudio.pause();
 
                     }
 
@@ -2028,9 +2048,7 @@ soundToggle.addEventListener(
 
             activeSoundEffects.forEach(
 
-                function (
-                    audio
-                ) {
+                function (audio) {
 
                     audio.pause();
 
@@ -2053,19 +2071,22 @@ soundToggle.addEventListener(
                 "♪";
 
 
-            switchMusic(
+            switchStoryMusic(
                 desiredStoryTrack
             );
 
         }
 
     }
+
 );
 
 
-/* =========================================
-   STORY VIDEOS
-========================================= */
+/* =========================================================
+   VIDEOS
+
+   ALWAYS MUTED.
+========================================================= */
 
 const storyVideos =
     document.querySelectorAll(
@@ -2075,16 +2096,11 @@ const storyVideos =
 
 storyVideos.forEach(
 
-    function (
-        video
-    ) {
+    function (video) {
 
-        video.muted =
-            true;
+        video.muted = true;
 
-
-        video.playsInline =
-            true;
+        video.playsInline = true;
 
     }
 
@@ -2094,15 +2110,11 @@ storyVideos.forEach(
 const videoObserver =
     new IntersectionObserver(
 
-        function (
-            entries
-        ) {
+        function (entries) {
 
             entries.forEach(
 
-                function (
-                    entry
-                ) {
+                function (entry) {
 
                     const video =
                         entry.target;
@@ -2153,9 +2165,7 @@ const videoObserver =
 
 storyVideos.forEach(
 
-    function (
-        video
-    ) {
+    function (video) {
 
         videoObserver.observe(
             video
@@ -2166,9 +2176,9 @@ storyVideos.forEach(
 );
 
 
-/* =========================================
-   STORY REVEALS
-========================================= */
+/* =========================================================
+   STORY REVEAL ANIMATIONS
+========================================================= */
 
 const revealItems =
     document.querySelectorAll(
@@ -2179,15 +2189,11 @@ const revealItems =
 const revealObserver =
     new IntersectionObserver(
 
-        function (
-            entries
-        ) {
+        function (entries) {
 
             entries.forEach(
 
-                function (
-                    entry
-                ) {
+                function (entry) {
 
                     if (
                         entry.isIntersecting
@@ -2206,8 +2212,7 @@ const revealObserver =
         },
 
         {
-            threshold:
-                0.14
+            threshold: 0.14
         }
 
     );
@@ -2215,9 +2220,7 @@ const revealObserver =
 
 revealItems.forEach(
 
-    function (
-        item
-    ) {
+    function (item) {
 
         revealObserver.observe(
             item
@@ -2228,13 +2231,11 @@ revealItems.forEach(
 );
 
 
-function activateVisibleReveals() {
+function revealVisibleItems() {
 
     revealItems.forEach(
 
-        function (
-            item
-        ) {
+        function (item) {
 
             const rect =
                 item.getBoundingClientRect();
@@ -2255,17 +2256,23 @@ function activateVisibleReveals() {
         }
 
     );
-
 }
 
 
-/* =========================================
-   FINAL CONFETTI BUTTON
-========================================= */
+/* =========================================================
+   FINAL BUTTON
+========================================================= */
 
 celebrateButton.addEventListener(
+
     "click",
+
     function () {
+
+        /*
+        THIS IS THE FIXED
+        FINAL CONFETTI.
+        */
 
         createFinalConfetti();
 
@@ -2273,29 +2280,66 @@ celebrateButton.addEventListener(
         celebrateButton.textContent =
             "Happy Birthday ✨";
 
+
+        /*
+        LITTLE BUTTON POP
+        */
+
+        celebrateButton.animate(
+
+            [
+                {
+                    transform:
+                        "scale(1)"
+                },
+
+                {
+                    transform:
+                        "scale(1.08)"
+                },
+
+                {
+                    transform:
+                        "scale(1)"
+                }
+            ],
+
+            {
+                duration: 450,
+
+                easing:
+                    "ease-out"
+            }
+
+        );
+
     }
+
 );
 
 
-/* =========================================
-   FULL SCREEN FINAL CONFETTI
-========================================= */
+/* =========================================================
+   FINAL FULL-SCREEN CONFETTI
+
+   DOES NOT USE CSS.
+   DOES NOT USE confettiContainer.
+   FIXED TO CURRENT VIEWPORT.
+========================================================= */
 
 function createFinalConfetti() {
 
     /*
-    REMOVE OLD CONFETTI
+    REMOVE PREVIOUS CONFETTI
+    IF BUTTON IS CLICKED AGAIN.
     */
 
     const oldLayer =
-        document.querySelector(
-            ".final-confetti-fixed"
+        document.getElementById(
+            "finalConfettiOverlay"
         );
 
 
-    if (
-        oldLayer
-    ) {
+    if (oldLayer) {
 
         oldLayer.remove();
 
@@ -2303,7 +2347,7 @@ function createFinalConfetti() {
 
 
     /*
-    CREATE FULL-SCREEN LAYER
+    CREATE FULL-SCREEN OVERLAY
     */
 
     const layer =
@@ -2312,33 +2356,52 @@ function createFinalConfetti() {
         );
 
 
-    layer.className =
-        "final-confetti-fixed";
+    layer.id =
+        "finalConfettiOverlay";
 
 
     layer.style.position =
         "fixed";
 
+
     layer.style.top =
         "0";
+
+
+    layer.style.right =
+        "0";
+
+
+    layer.style.bottom =
+        "0";
+
 
     layer.style.left =
         "0";
 
+
     layer.style.width =
         "100vw";
+
 
     layer.style.height =
         "100vh";
 
-    layer.style.overflow =
-        "hidden";
 
     layer.style.pointerEvents =
         "none";
 
+
+    layer.style.overflow =
+        "hidden";
+
+
+    /*
+    EXTREMELY HIGH Z-INDEX
+    */
+
     layer.style.zIndex =
-        "99999";
+        "2147483647";
 
 
     document.body.appendChild(
@@ -2346,40 +2409,51 @@ function createFinalConfetti() {
     );
 
 
-    const colours =
+    const colors =
         [
-            "#f4c5d0",
             "#ffffff",
-            "#e1bc80",
-            "#c47789",
-            "#f5e4cb",
-            "#ffd6df",
-            "#ffe49c"
+            "#ffd7e0",
+            "#f3a7ba",
+            "#d8879b",
+            "#ffe59a",
+            "#e7bf78",
+            "#f7c7d3",
+            "#fff0c7"
         ];
 
 
     /*
-    CREATE CONFETTI PIECES
+    CONFETTI RAIN
     */
 
     for (
         let i = 0;
-        i < 120;
+        i < 180;
         i++
     ) {
 
         const piece =
             document.createElement(
-                "span"
+                "div"
             );
 
 
-        const size =
-            6
+        const width =
+            5
             +
             Math.random()
             *
-            7;
+            8;
+
+
+        const height =
+            width
+            *
+            (
+                1
+                +
+                Math.random()
+            );
 
 
         piece.style.position =
@@ -2387,7 +2461,7 @@ function createFinalConfetti() {
 
 
         piece.style.top =
-            "-30px";
+            "-40px";
 
 
         piece.style.left =
@@ -2395,43 +2469,48 @@ function createFinalConfetti() {
             *
             100
             +
-            "vw";
+            "%";
 
 
         piece.style.width =
-            size
+            width
             +
             "px";
 
 
         piece.style.height =
-            size
-            *
-            1.5
+            height
             +
             "px";
 
 
-        piece.style.borderRadius =
-            "3px";
-
-
-        piece.style.background =
-            colours[
+        piece.style.backgroundColor =
+            colors[
                 Math.floor(
                     Math.random()
                     *
-                    colours.length
+                    colors.length
                 )
             ];
 
 
+        piece.style.borderRadius =
+            Math.random() > 0.65
+                ?
+                "50%"
+                :
+                "2px";
+
+
         piece.style.opacity =
-            0.7
-            +
-            Math.random()
-            *
-            0.3;
+            (
+                0.75
+                +
+                Math.random()
+                *
+                0.25
+            )
+            .toString();
 
 
         layer.appendChild(
@@ -2439,37 +2518,33 @@ function createFinalConfetti() {
         );
 
 
+        const drift =
+            -140
+            +
+            Math.random()
+            *
+            280;
+
+
+        const spin =
+            720
+            +
+            Math.random()
+            *
+            1200;
+
+
         piece.animate(
 
             [
                 {
                     transform:
-                        "translateY(-30px) rotate(0deg)"
+                        "translate3d(0,-60px,0) rotate(0deg)"
                 },
 
                 {
                     transform:
-                        `
-                        translateY(110vh)
-                        translateX(
-                            ${
-                                -80
-                                +
-                                Math.random()
-                                *
-                                160
-                            }px
-                        )
-                        rotate(
-                            ${
-                                500
-                                +
-                                Math.random()
-                                *
-                                800
-                            }deg
-                        )
-                        `
+                        `translate3d(${drift}px,115vh,0) rotate(${spin}deg)`
                 }
             ],
 
@@ -2479,15 +2554,15 @@ function createFinalConfetti() {
                     +
                     Math.random()
                     *
-                    2400,
+                    2800,
 
                 delay:
                     Math.random()
                     *
-                    700,
+                    900,
 
                 easing:
-                    "cubic-bezier(.25,.6,.35,1)",
+                    "linear",
 
                 fill:
                     "forwards"
@@ -2499,7 +2574,157 @@ function createFinalConfetti() {
 
 
     /*
-    REMOVE AFTER CONFETTI FINISHES
+    EXTRA CENTRAL BURST
+
+    MAKES THE EFFECT IMMEDIATELY
+    OBVIOUS WHEN BUTTON IS CLICKED.
+    */
+
+    for (
+        let i = 0;
+        i < 55;
+        i++
+    ) {
+
+        const piece =
+            document.createElement(
+                "div"
+            );
+
+
+        const size =
+            6
+            +
+            Math.random()
+            *
+            8;
+
+
+        piece.style.position =
+            "absolute";
+
+
+        piece.style.left =
+            "50%";
+
+
+        piece.style.top =
+            "58%";
+
+
+        piece.style.width =
+            size
+            +
+            "px";
+
+
+        piece.style.height =
+            size
+            *
+            1.4
+            +
+            "px";
+
+
+        piece.style.backgroundColor =
+            colors[
+                Math.floor(
+                    Math.random()
+                    *
+                    colors.length
+                )
+            ];
+
+
+        piece.style.borderRadius =
+            Math.random() > 0.5
+                ?
+                "50%"
+                :
+                "2px";
+
+
+        layer.appendChild(
+            piece
+        );
+
+
+        const angle =
+            Math.random()
+            *
+            Math.PI
+            *
+            2;
+
+
+        const distance =
+            120
+            +
+            Math.random()
+            *
+            330;
+
+
+        const x =
+            Math.cos(angle)
+            *
+            distance;
+
+
+        const y =
+            Math.sin(angle)
+            *
+            distance;
+
+
+        piece.animate(
+
+            [
+                {
+                    opacity: 1,
+
+                    transform:
+                        "translate(-50%,-50%) scale(0.2) rotate(0deg)"
+                },
+
+                {
+                    opacity: 1,
+
+                    transform:
+                        `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1) rotate(540deg)`
+                },
+
+                {
+                    opacity: 0,
+
+                    transform:
+                        `translate(calc(-50% + ${x * 1.25}px), calc(-50% + ${y * 1.25 + 180}px)) scale(0.8) rotate(900deg)`
+                }
+            ],
+
+            {
+                duration:
+                    1300
+                    +
+                    Math.random()
+                    *
+                    900,
+
+                easing:
+                    "cubic-bezier(.15,.7,.3,1)",
+
+                fill:
+                    "forwards"
+            }
+
+        );
+
+    }
+
+
+    /*
+    REMOVE OVERLAY AFTER
+    EVERYTHING FINISHES.
     */
 
     setTimeout(
@@ -2516,22 +2741,23 @@ function createFinalConfetti() {
 
         },
 
-        6500
+        7000
 
     );
-
 }
 
 
-/* =========================================
-   RESTART STORY
-========================================= */
+/* =========================================================
+   REPLAY STORY
+========================================================= */
 
 restartStoryButton.addEventListener(
+
     "click",
+
     function () {
 
-        suppressMusicObserver =
+        storyObserverPaused =
             true;
 
 
@@ -2544,7 +2770,7 @@ restartStoryButton.addEventListener(
             "assets/audio/01-dreamy.mp3";
 
 
-        switchMusic(
+        switchStoryMusic(
             desiredStoryTrack
         );
 
@@ -2564,15 +2790,21 @@ restartStoryButton.addEventListener(
             );
 
 
+        /*
+        PREVENT EVERY CHAPTER
+        FROM TRIGGERING MUSIC
+        WHILE PAGE SCROLLS UP.
+        */
+
         setTimeout(
 
             function () {
 
-                suppressMusicObserver =
+                storyObserverPaused =
                     false;
 
 
-                chooseMostVisibleTrack();
+                selectVisibleStoryTrack();
 
             },
 
@@ -2581,63 +2813,71 @@ restartStoryButton.addEventListener(
         );
 
     }
+
 );
 
 
-/* =========================================
-   TAB / PHONE BACKGROUND HANDLING
-========================================= */
+/* =========================================================
+   WHEN TAB / PHONE BROWSER
+   GOES INTO BACKGROUND
+========================================================= */
 
-let cakeWasPlaying =
+let cakeMusicWasPlaying =
     false;
 
-let storyWasPlaying =
+let storyMusicWasPlaying =
     false;
 
 
 document.addEventListener(
+
     "visibilitychange",
+
     function () {
+
+        /*
+        USER LEAVES TAB
+        */
 
         if (
             document.hidden
         ) {
 
-            cakeWasPlaying =
-                !cakeBackgroundAudio.paused;
+            cakeMusicWasPlaying =
+                !cakeMusic.paused;
 
 
-            storyWasPlaying =
-                currentAudio
-                &&
-                !currentAudio.paused;
+            storyMusicWasPlaying =
+                Boolean(
+                    currentStoryAudio
+                    &&
+                    !currentStoryAudio.paused
+                );
 
 
             if (
-                cakeWasPlaying
+                cakeMusicWasPlaying
             ) {
 
-                cakeBackgroundAudio.pause();
+                cakeMusic.pause();
 
             }
 
 
             if (
-                storyWasPlaying
+                storyMusicWasPlaying
                 &&
-                currentAudio
+                currentStoryAudio
             ) {
 
-                currentAudio.pause();
+                currentStoryAudio.pause();
 
             }
 
 
             storyVideos.forEach(
 
-                function (
-                    video
-                ) {
+                function (video) {
 
                     video.pause();
 
@@ -2647,26 +2887,26 @@ document.addEventListener(
 
 
             return;
-
         }
 
 
-        if (
-            soundMuted
-        ) {
+        /*
+        USER RETURNS
+        */
+
+        if (soundMuted) {
 
             return;
-
         }
 
 
         if (
-            isCakePageOpen()
+            isCakeOpen()
             &&
-            cakeWasPlaying
+            cakeMusicWasPlaying
         ) {
 
-            cakeBackgroundAudio.play()
+            cakeMusic.play()
                 .catch(
                     function () {}
                 );
@@ -2677,22 +2917,23 @@ document.addEventListener(
         if (
             isStoryOpen()
             &&
-            storyWasPlaying
+            storyMusicWasPlaying
         ) {
 
-            switchMusic(
+            switchStoryMusic(
                 desiredStoryTrack
             );
 
         }
 
 
-        cakeWasPlaying =
+        cakeMusicWasPlaying =
             false;
 
 
-        storyWasPlaying =
+        storyMusicWasPlaying =
             false;
 
     }
+
 );
