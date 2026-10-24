@@ -33,9 +33,6 @@ let suppressMusicObserver = false;
 
 /* =========================================
    AUDIO FADE TOKENS
-
-   Prevents two different fades from
-   fighting over the same audio element.
 ========================================= */
 
 const fadeTokens =
@@ -46,7 +43,7 @@ const fadeTokens =
    CAKE BACKGROUND MUSIC
 
    THIS IS THE ONLY AUDIO ALLOWED
-   WHILE THE CAKE SCREEN IS OPEN.
+   WHILE THE CAKE SCREEN IS OPEN
 ========================================= */
 
 const cakeBackgroundAudio =
@@ -183,17 +180,9 @@ const restartStoryButton =
         "restartStoryButton"
     );
 
-const confettiContainer =
-    document.getElementById(
-        "confettiContainer"
-    );
-
 
 /* =========================================
    ACTIVE SOUND EFFECTS
-
-   We keep track of them so we can
-   guarantee they stop before cake music.
 ========================================= */
 
 const activeSoundEffects =
@@ -201,7 +190,7 @@ const activeSoundEffects =
 
 
 /* =========================================
-   IS CAKE PAGE OPEN?
+   CHECK WHICH SCREEN IS ACTIVE
 ========================================= */
 
 function isCakePageOpen() {
@@ -212,10 +201,6 @@ function isCakePageOpen() {
 
 }
 
-
-/* =========================================
-   IS STORY OPEN?
-========================================= */
 
 function isStoryOpen() {
 
@@ -264,12 +249,14 @@ function animateScreenIn(
         [
             {
                 opacity: 0,
+
                 transform:
                     "translateY(8px)"
             },
 
             {
                 opacity: 1,
+
                 transform:
                     "translateY(0)"
             }
@@ -277,6 +264,7 @@ function animateScreenIn(
 
         {
             duration: 450,
+
             easing:
                 "cubic-bezier(.2,.8,.2,1)"
         }
@@ -288,9 +276,6 @@ function animateScreenIn(
 
 /* =========================================
    PROFESSIONAL AUDIO FADE
-
-   New fade automatically cancels
-   an old fade on the same audio.
 ========================================= */
 
 function fadeAudio(
@@ -304,8 +289,12 @@ function fadeAudio(
         !audio
     ) {
 
-        if (callback) {
+        if (
+            callback
+        ) {
+
             callback();
+
         }
 
         return;
@@ -336,7 +325,9 @@ function fadeAudio(
     ) {
 
         if (
-            fadeTokens.get(audio)
+            fadeTokens.get(
+                audio
+            )
             !==
             token
         ) {
@@ -349,6 +340,7 @@ function fadeAudio(
         const progress =
             Math.min(
                 1,
+
                 (
                     time
                     -
@@ -358,13 +350,6 @@ function fadeAudio(
                 duration
             );
 
-
-        /*
-        SMOOTHSTEP EASING
-
-        Less mechanical than a
-        straight linear volume fade.
-        */
 
         const eased =
             progress
@@ -395,6 +380,7 @@ function fadeAudio(
         volume =
             Math.max(
                 0,
+
                 Math.min(
                     1,
                     volume
@@ -449,11 +435,6 @@ function playSfx(
     path,
     volume = 0.4
 ) {
-
-    /*
-    ABSOLUTELY NO SFX
-    DURING CAKE SCREEN
-    */
 
     if (
         soundMuted
@@ -521,8 +502,6 @@ function playSfx(
 
 /* =========================================
    FADE OUT ALL SOUND EFFECTS
-
-   Used before entering cake page.
 ========================================= */
 
 function fadeOutAllSfx(
@@ -568,10 +547,6 @@ function fadeOutAllSfx(
 
 /* =========================================
    STANDARD BUTTON CLICK SOUND
-
-   Gift buttons have their own sparkle,
-   so they are excluded to prevent
-   two effects playing together.
 ========================================= */
 
 document.addEventListener(
@@ -639,11 +614,6 @@ document.addEventListener(
 ========================================= */
 
 function startCakeMusic() {
-
-    /*
-    GUARANTEE THAT NO STORY MUSIC
-    OR SFX IS STILL PLAYING.
-    */
 
     storySwitchVersion++;
 
@@ -825,10 +795,6 @@ giftOneButton.addEventListener(
     "click",
     function () {
 
-        /*
-        PREVENT DOUBLE CLICK GLITCH
-        */
-
         if (
             giftOneOpening
         ) {
@@ -882,11 +848,6 @@ giftOneButton.addEventListener(
         );
 
 
-        /*
-        BEGIN FADING SPARKLE BEFORE
-        CAKE SCREEN BECOMES VISIBLE.
-        */
-
         setTimeout(
 
             function () {
@@ -925,11 +886,6 @@ giftOneButton.addEventListener(
                 );
 
 
-                /*
-                NOW ONLY HAPPY BIRTHDAY
-                MUSIC IS ALLOWED.
-                */
-
                 startCakeMusic();
 
 
@@ -948,7 +904,6 @@ giftOneButton.addEventListener(
 
 /* =========================================
    CAKE CONFETTI
-   VISUAL ONLY
 ========================================= */
 
 function createCakeConfetti() {
@@ -956,11 +911,6 @@ function createCakeConfetti() {
     cakeScreen.style.position =
         "relative";
 
-
-    /*
-    REMOVE OLD CAKE CONFETTI IF
-    SOMETHING UNEXPECTED HAPPENED.
-    */
 
     const oldLayer =
         cakeScreen.querySelector(
@@ -1090,9 +1040,6 @@ function createCakeConfetti() {
 
 /* =========================================
    CUT CAKE
-
-   ONLY HAPPY BIRTHDAY MUSIC
-   CONTINUES.
 ========================================= */
 
 cakeSlider.addEventListener(
@@ -1120,16 +1067,8 @@ cakeSlider.addEventListener(
             true;
 
 
-        /*
-        VISUAL CONFETTI
-        */
-
         createCakeConfetti();
 
-
-        /*
-        SWITCH TO CUT CAKE
-        */
 
         cakeImage.src =
             "assets/images/cake-cut.png";
@@ -1173,10 +1112,6 @@ cakeSlider.addEventListener(
             "hidden"
         );
 
-
-        /*
-        SMALL CINEMATIC PAUSE
-        */
 
         setTimeout(
 
@@ -1245,8 +1180,6 @@ cakeSlider.addEventListener(
 
 /* =========================================
    NOM NOM
-
-   NO SFX HERE.
 ========================================= */
 
 nomNomButton.addEventListener(
@@ -1296,9 +1229,6 @@ nomNomButton.addEventListener(
 
 /* =========================================
    RETURN TO PENGUINS
-
-   FIRST MUSIC FADES OUT.
-   THEN SCREEN CHANGES.
 ========================================= */
 
 backToPenguinsButton.addEventListener(
@@ -1369,13 +1299,6 @@ backToPenguinsButton.addEventListener(
                 );
 
 
-                /*
-                CAKE PAGE IS GONE NOW.
-
-                NORMAL EFFECTS CAN
-                SAFELY RETURN.
-                */
-
                 setTimeout(
 
                     function () {
@@ -1439,10 +1362,6 @@ backToPenguinsButton.addEventListener(
 giftTwoButton.addEventListener(
     "click",
     function () {
-
-        /*
-        LOCKED
-        */
 
         if (
             giftTwoUnlocked === false
@@ -1520,10 +1439,6 @@ giftTwoButton.addEventListener(
         }
 
 
-        /*
-        PREVENT MULTIPLE OPEN EVENTS
-        */
-
         if (
             giftTwoOpening
         ) {
@@ -1572,11 +1487,6 @@ giftTwoButton.addEventListener(
         );
 
 
-        /*
-        START SOFTENING THE SPARKLE
-        WHILE STORY OPENS.
-        */
-
         setTimeout(
 
             function () {
@@ -1617,10 +1527,6 @@ giftTwoButton.addEventListener(
 ========================================= */
 
 function openStory() {
-
-    /*
-    GUARANTEE CAKE AUDIO IS DEAD.
-    */
 
     cakeBackgroundAudio.pause();
 
@@ -1663,11 +1569,6 @@ function openStory() {
     );
 
 
-    /*
-    SMALL GAP LETS GIFT SPARKLE
-    NATURALLY BLEND AWAY.
-    */
-
     setTimeout(
 
         function () {
@@ -1696,11 +1597,6 @@ function openStory() {
 
 /* =========================================
    STORY MUSIC CROSSFADE
-
-   SAFER VERSION:
-   - prevents stale tracks winning
-   - handles rapid scrolling
-   - handles mute/unmute properly
 ========================================= */
 
 function switchMusic(
@@ -1723,10 +1619,6 @@ function switchMusic(
 
     }
 
-
-    /*
-    SAME TRACK ALREADY ACTIVE
-    */
 
     if (
         currentAudio
@@ -1785,8 +1677,10 @@ function switchMusic(
     nextAudio.loop =
         true;
 
+
     nextAudio.preload =
         "auto";
+
 
     nextAudio.volume =
         0;
@@ -1799,12 +1693,6 @@ function switchMusic(
     nextAudio.play()
         .then(
             function () {
-
-                /*
-                IF ANOTHER TRACK WAS REQUESTED
-                BEFORE THIS ONE LOADED,
-                ABANDON THIS OLD REQUEST.
-                */
 
                 if (
                     version
@@ -1834,10 +1722,6 @@ function switchMusic(
                     newPath;
 
 
-                /*
-                FADE NEW TRACK IN
-                */
-
                 fadeAudio(
 
                     nextAudio,
@@ -1849,14 +1733,12 @@ function switchMusic(
                 );
 
 
-                /*
-                FADE OLD TRACK OUT
-                */
-
                 if (
                     oldAudio
                     &&
-                    oldAudio !== nextAudio
+                    oldAudio
+                    !==
+                    nextAudio
                 ) {
 
                     fadeAudio(
@@ -1868,11 +1750,6 @@ function switchMusic(
                         1350,
 
                         function () {
-
-                            /*
-                            ONLY STOP OLD AUDIO.
-                            NEVER TOUCH THE NEW ONE.
-                            */
 
                             if (
                                 oldAudio
@@ -1904,9 +1781,6 @@ function switchMusic(
 
 /* =========================================
    STORY MUSIC OBSERVER
-
-   Tracks all visible sections instead
-   of relying only on the latest callback.
 ========================================= */
 
 const musicSections =
@@ -1966,7 +1840,9 @@ function chooseMostVisibleTrack() {
         ) {
 
             if (
-                ratio > bestRatio
+                ratio
+                >
+                bestRatio
             ) {
 
                 bestRatio =
@@ -2010,12 +1886,6 @@ function chooseMostVisibleTrack() {
     desiredStoryTrack =
         track;
 
-
-    /*
-    TINY DEBOUNCE:
-    avoids track switching back and forth
-    when two sections are on screen.
-    */
 
     clearTimeout(
         storyTrackTimer
@@ -2128,11 +1998,6 @@ soundToggle.addEventListener(
                 "×";
 
 
-            /*
-            CANCEL ANY TRACK THAT IS
-            STILL TRYING TO LOAD.
-            */
-
             storySwitchVersion++;
 
 
@@ -2188,15 +2053,6 @@ soundToggle.addEventListener(
                 "♪";
 
 
-            /*
-            IMPORTANT:
-
-            Resume the track belonging to
-            the section currently visible,
-            NOT necessarily the track that
-            was playing before mute.
-            */
-
             switchMusic(
                 desiredStoryTrack
             );
@@ -2208,10 +2064,7 @@ soundToggle.addEventListener(
 
 
 /* =========================================
-   VIDEOS
-
-   ALWAYS MUTED
-   PLAY ONLY WHEN VISIBLE.
+   STORY VIDEOS
 ========================================= */
 
 const storyVideos =
@@ -2353,7 +2206,8 @@ const revealObserver =
         },
 
         {
-            threshold: 0.14
+            threshold:
+                0.14
         }
 
     );
@@ -2406,7 +2260,7 @@ function activateVisibleReveals() {
 
 
 /* =========================================
-   FINAL CONFETTI
+   FINAL CONFETTI BUTTON
 ========================================= */
 
 celebrateButton.addEventListener(
@@ -2423,10 +2277,73 @@ celebrateButton.addEventListener(
 );
 
 
+/* =========================================
+   FULL SCREEN FINAL CONFETTI
+========================================= */
+
 function createFinalConfetti() {
 
-    confettiContainer.innerHTML =
-        "";
+    /*
+    REMOVE OLD CONFETTI
+    */
+
+    const oldLayer =
+        document.querySelector(
+            ".final-confetti-fixed"
+        );
+
+
+    if (
+        oldLayer
+    ) {
+
+        oldLayer.remove();
+
+    }
+
+
+    /*
+    CREATE FULL-SCREEN LAYER
+    */
+
+    const layer =
+        document.createElement(
+            "div"
+        );
+
+
+    layer.className =
+        "final-confetti-fixed";
+
+
+    layer.style.position =
+        "fixed";
+
+    layer.style.top =
+        "0";
+
+    layer.style.left =
+        "0";
+
+    layer.style.width =
+        "100vw";
+
+    layer.style.height =
+        "100vh";
+
+    layer.style.overflow =
+        "hidden";
+
+    layer.style.pointerEvents =
+        "none";
+
+    layer.style.zIndex =
+        "99999";
+
+
+    document.body.appendChild(
+        layer
+    );
 
 
     const colours =
@@ -2435,13 +2352,19 @@ function createFinalConfetti() {
             "#ffffff",
             "#e1bc80",
             "#c47789",
-            "#f5e4cb"
+            "#f5e4cb",
+            "#ffd6df",
+            "#ffe49c"
         ];
 
 
+    /*
+    CREATE CONFETTI PIECES
+    */
+
     for (
         let i = 0;
-        i < 95;
+        i < 120;
         i++
     ) {
 
@@ -2451,9 +2374,20 @@ function createFinalConfetti() {
             );
 
 
-        piece.classList.add(
-            "confetti-piece"
-        );
+        const size =
+            6
+            +
+            Math.random()
+            *
+            7;
+
+
+        piece.style.position =
+            "absolute";
+
+
+        piece.style.top =
+            "-30px";
 
 
         piece.style.left =
@@ -2461,7 +2395,25 @@ function createFinalConfetti() {
             *
             100
             +
-            "%";
+            "vw";
+
+
+        piece.style.width =
+            size
+            +
+            "px";
+
+
+        piece.style.height =
+            size
+            *
+            1.5
+            +
+            "px";
+
+
+        piece.style.borderRadius =
+            "3px";
 
 
         piece.style.background =
@@ -2474,45 +2426,97 @@ function createFinalConfetti() {
             ];
 
 
-        piece.style.animationDuration =
-            (
-                3
-                +
-                Math.random()
-                *
-                4
-            )
+        piece.style.opacity =
+            0.7
             +
-            "s";
+            Math.random()
+            *
+            0.3;
 
 
-        piece.style.animationDelay =
-            (
-                Math.random()
-                *
-                0.8
-            )
-            +
-            "s";
-
-
-        confettiContainer.appendChild(
+        layer.appendChild(
             piece
+        );
+
+
+        piece.animate(
+
+            [
+                {
+                    transform:
+                        "translateY(-30px) rotate(0deg)"
+                },
+
+                {
+                    transform:
+                        `
+                        translateY(110vh)
+                        translateX(
+                            ${
+                                -80
+                                +
+                                Math.random()
+                                *
+                                160
+                            }px
+                        )
+                        rotate(
+                            ${
+                                500
+                                +
+                                Math.random()
+                                *
+                                800
+                            }deg
+                        )
+                        `
+                }
+            ],
+
+            {
+                duration:
+                    2800
+                    +
+                    Math.random()
+                    *
+                    2400,
+
+                delay:
+                    Math.random()
+                    *
+                    700,
+
+                easing:
+                    "cubic-bezier(.25,.6,.35,1)",
+
+                fill:
+                    "forwards"
+            }
+
         );
 
     }
 
 
+    /*
+    REMOVE AFTER CONFETTI FINISHES
+    */
+
     setTimeout(
 
         function () {
 
-            confettiContainer.innerHTML =
-                "";
+            if (
+                layer.isConnected
+            ) {
+
+                layer.remove();
+
+            }
 
         },
 
-        8000
+        6500
 
     );
 
@@ -2521,10 +2525,6 @@ function createFinalConfetti() {
 
 /* =========================================
    RESTART STORY
-
-   MUSIC OBSERVER IS TEMPORARILY PAUSED
-   SO SCROLLING PAST ALL THE CHAPTERS
-   DOES NOT RAPIDLY CHANGE SONGS.
 ========================================= */
 
 restartStoryButton.addEventListener(
@@ -2557,6 +2557,7 @@ restartStoryButton.addEventListener(
                 {
                     behavior:
                         "smooth",
+
                     block:
                         "start"
                 }
@@ -2584,10 +2585,7 @@ restartStoryButton.addEventListener(
 
 
 /* =========================================
-   PHONE / TAB BACKGROUND HANDLING
-
-   Prevent music continuing oddly if
-   browser is minimized.
+   TAB / PHONE BACKGROUND HANDLING
 ========================================= */
 
 let cakeWasPlaying =
@@ -2652,10 +2650,6 @@ document.addEventListener(
 
         }
 
-
-        /*
-        RETURNING TO TAB
-        */
 
         if (
             soundMuted
