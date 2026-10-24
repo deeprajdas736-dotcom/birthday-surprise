@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#fff8f5"
+    >
+
+    <title>A Birthday Surprise</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         SOUND BUTTON
+    ========================================== -->
+
+    <button
+        id="soundToggle"
+        class="sound-toggle hidden"
+        type="button"
+    >
+
+        <span id="soundIcon">
+            ♪
+        </span>
+
+        <span id="soundText">
+            Sound On
+        </span>
+
+    </button>
+
+
+
+    <!-- =========================================
+         SCREEN 1
+         OPENING
+    ========================================== -->
+
+    <section
+        id="welcomeScreen"
+        class="screen welcome-screen"
+    >
+
+        <div class="welcome-content">
+
+            <p class="eyebrow">
+                Something special is waiting...
+            </p>
+
+            <h1>
+                I made something
+                <br>
+                for you ❤️
+            </h1>
+
+            <p class="opening-message">
+
+                But apparently,
+                two penguins have taken control of it.
+
+            </p>
+
+            <button
+                id="startButton"
+                class="primary-button"
+            >
+
+                Tap to Begin ✨
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         SCREEN 2
+         PENGUINS
+    ========================================== -->
+
+    <section
+        id="penguinScreen"
+        class="screen penguin-screen hidden"
+    >
+
+        <div class="penguin-heading">
+
+            <p class="eyebrow">
+                Birthday Security Department
+            </p>
+
+            <h2>
+                Two Penguins.
+                <br>
+                Two Gifts.
+            </h2>
+
+            <p>
+                Apparently they have some rules.
+            </p>
+
+        </div>
+
+
+        <div class="penguin-area">
+
+
+            <!-- PENGUIN 1 -->
+
+            <article class="penguin-card">
+
+                <div class="speech-bubble">
+
+                    Mera gift pehle kholna,
+                    ma'am. 🎁
+
+                    <br><br>
+
+                    Birthday protocol hai.
+
+                </div>
+
+
+                <img
+                    src="assets/images/penguin-1.png"
+                    class="penguin-image"
+                    alt="Penguin number one"
+                >
+
+
+                <button
+                    id="giftOneButton"
+                    class="gift-button"
+                >
+
+                    <img
+                        src="assets/images/gift-1.png"
+                        class="gift-image"
+                        alt="First gift"
+                    >
+
+                    <span>
+                        OPEN GIFT 01
+                    </span>
+
+                </button>
+
+            </article>
+
+
+
+            <!-- PENGUIN 2 -->
+
+            <article class="penguin-card">
+
+                <div
+                    id="penguinTwoText"
+                    class="speech-bubble"
+                >
+
+                    Haan ji. 😌
+
+                    <br><br>
+
+                    Pehle iski baat maaniye.
+
+                    <br>
+
+                    Phir meri baari.
+
+                </div>
+
+
+                <img
+                    src="assets/images/penguin-2.png"
+                    class="penguin-image"
+                    alt="Penguin number two"
+                >
+
+
+                <button
+                    id="giftTwoButton"
+                    class="gift-button gift-two-locked"
+                >
+
+                    <div class="gift-container">
+
+                        <img
+                            src="assets/images/gift-2.png"
+                            class="gift-image"
+                            alt="Second gift"
+                        >
+
+                        <div
+                            id="giftTwoLock"
+                            class="lock"
+                        >
+                            🔒
+                        </div>
+
+                    </div>
+
+                    <span>
+                        OPEN GIFT 02
+                    </span>
+
+                </button>
+
+            </article>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         SCREEN 3
+         CAKE
+    ========================================== -->
+
+    <section
+        id="cakeScreen"
+        class="screen cake-screen hidden"
+    >
+
+        <div class="cake-content">
+
+            <p class="eyebrow">
+                Gift No. 01
+            </p>
+
+
+            <h2>
+                Ma'am, cake cut karlo pehle 🎂
+            </h2>
+
+
+            <p class="cake-message">
+
+                Birthday hai.
+
+                <br>
+
+                Rules toh follow karne padenge 😌
+
+            </p>
+
+
+            <div class="cake-image-area">
+
+                <img
+                    id="cakeImage"
+                    src="assets/images/cake.png"
+                    class="cake-image"
+                    alt="Birthday cake"
+                >
+
+            </div>
+
+
+
+            <!-- CUT -->
+
+            <div
+                id="cakeCutArea"
+                class="cake-cut-area"
+            >
+
+                <p class="cake-instruction">
+                    Slide to cut the cake →
+                </p>
+
+
+                <input
+                    id="cakeSlider"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="0"
+                >
+
+
+                <p class="slider-hint">
+                    Drag all the way to the right.
+                </p>
+
+            </div>
+
+
+
+            <!-- FIRST BITE -->
+
+            <div
+                id="cakeAfterCut"
+                class="cake-after-cut hidden"
+            >
+
+                <h3>
+                    Perfect! 🎉
+                </h3>
+
+                <p>
+
+                    Ab cake ka pehla bite
+                    aapko.
+
+                    <br>
+
+                    Obviously. 😌
+
+                </p>
+
+
+                <img
+                    src="assets/images/cake-slice.png"
+                    class="cake-slice"
+                    alt="Slice of birthday cake"
+                >
+
+
+                <button
+                    id="nomNomButton"
+                    class="primary-button"
+                >
+
+                    Nom Nom 😌
+
+                </button>
+
+            </div>
+
+
+
+            <!-- FINISH CAKE -->
+
+            <div
+                id="cakeFinish"
+                class="cake-finish hidden"
+            >
+
+                <div class="big-emoji">
+                    🐧✨
+                </div>
+
+                <h3>
+                    Excellent choice, ma'am.
+                </h3>
+
+                <p>
+
+                    Cake protocol complete.
+
+                    <br><br>
+
+                    Ab Penguin No. 2
+                    aapka wait kar raha hai. 🎁
+
+                </p>
+
+
+                <button
+                    id="backToPenguinsButton"
+                    class="primary-button"
+                >
+
+                    Back to the Penguins →
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         GIFT 2
+         COMPLETE STORY
+    ========================================== -->
+
+    <main
+        id="storyScreen"
+        class="story-screen hidden"
+    >
+
+
+        <!-- =====================================
+             STORY INTRO
+        ====================================== -->
+
+        <section
+            id="storyBeginning"
+            class="story-hero story-music-section"
+            data-track="assets/audio/01-dreamy.mp3"
+        >
+
+            <div class="story-hero-glow"></div>
+
+
+            <div class="story-hero-content reveal">
+
+                <p class="eyebrow">
+                    Gift No. 02
+                </p>
+
+                <h2>
+                    This one isn't really a gift.
+                </h2>
+
+                <p>
+
+                    It's a small reminder of
+                    the person you are...
+
+                    <br><br>
+
+                    and of the little things
+                    about you that make life
+                    around you more beautiful.
+
+                </p>
+
+                <a
+                    href="#eyesSection"
+                    class="story-start-button"
+                >
+                    Open it ✨
+                </a>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             1. EYES
+             PHOTO
+        ====================================== -->
+
+        <section
+            id="eyesSection"
+            class="memory-section story-music-section"
+            data-track="assets/audio/01-dreamy.mp3"
+        >
+
+            <div class="memory-layout">
+
+                <div class="media-card reveal">
+
+                    <img
+                        src="assets/images/03-eyes.jpg"
+                        alt="Beautiful portrait highlighting her eyes"
+                    >
+
+                </div>
+
+
+                <div class="memory-text reveal">
+
+                    <span class="chapter-number">
+                        01
+                    </span>
+
+                    <p class="eyebrow">
+                        Those Eyes
+                    </p>
+
+                    <h2>
+                        Before you knew
+                        you were being noticed.
+                    </h2>
+
+                    <p>
+
+                        Long before all these
+                        memories had names,
+                        there was something about
+                        you that was impossible
+                        not to notice.
+
+                    </p>
+
+                    <p class="highlight-text">
+                        Your eyes.
+                    </p>
+
+                    <p>
+
+                        Ridiculously beautiful,
+                        yes.
+
+                        But somehow they carry
+                        curiosity, confidence,
+                        mischief and a hundred
+                        thoughts all at once.
+
+                    </p>
+
+                    <p>
+
+                        There was a time when
+                        I would quietly steal a
+                        glance whenever you
+                        weren't looking.
+
+                    </p>
+
+                    <p>
+
+                        And the funny thing is,
+                        as beautiful as those eyes
+                        are, the person behind
+                        them turned out to be
+                        even more interesting.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             2. FUNNY VERSION
+             VIDEO
+        ====================================== -->
+
+        <section
+            class="memory-section alternate story-music-section"
+            data-track="assets/audio/01-dreamy.mp3"
+        >
+
+            <div class="memory-layout reverse">
+
+                <div class="media-card video-card reveal">
+
+                    <video
+                        class="story-video"
+                        src="assets/videos/04-funny-closeup.mp4"
+                        muted
+                        loop
+                        playsinline
+                        preload="metadata"
+                    ></video>
+
+                </div>
+
+
+                <div class="memory-text reveal">
+
+                    <span class="chapter-number">
+                        02
+                    </span>
+
+                    <p class="eyebrow">
+                        Important Evidence
+                    </p>
+
+                    <h2>
+                        Of course...
+                    </h2>
+
+                    <p>
+
+                        This is also the same
+                        highly sophisticated,
+                        extremely serious,
+                        deeply intellectual
+                        person we are talking about.
+
+                    </p>
+
+                    <p class="highlight-text">
+                        Exhibit A. 😌
+                    </p>
+
+                    <p>
+
+                        And I wouldn't remove
+                        this version of you
+                        from the story for anything.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             3. SMILE
+             PHOTO
+        ====================================== -->
+
+        <section
+            class="memory-section story-music-section"
+            data-track="assets/audio/02-warm.mp3"
+        >
+
+            <div class="memory-layout">
+
+                <div class="media-card reveal">
+
+                    <img
+                        src="assets/images/01-night-smile.jpg"
+                        alt="Her smiling"
+                    >
+
+                </div>
+
+
+                <div class="memory-text reveal">
+
+                    <span class="chapter-number">
+                        03
+                    </span>
+
+                    <p class="eyebrow">
+                        That Smile
+                    </p>
+
+                    <h2>
+                        Some smiles make
+                        a picture better.
+                    </h2>
+
+                    <p>
+
+                        Yours somehow makes
+                        things feel calmer.
+
+                    </p>
+
+                    <p>
+
+                        There was once a boy who
+                        could barely ask you a
+                        simple question without
+                        fumbling half his words.
+
+                    </p>
+
+                    <p>
+
+                        Somewhere along the way,
+                        that same smile became
+                        associated with courage.
+
+                    </p>
+
+                    <p>
+
+                        Poster competitions.
+                        Science-model competitions.
+                        New ideas.
+                        Moments of doubt.
+
+                    </p>
+
+                    <p class="highlight-text">
+
+                        You have this strange
+                        ability to make people
+                        believe they should
+                        at least try.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             4. VIDEO CALL
+             VIDEO
+        ====================================== -->
+
+        <section
+            class="memory-section alternate story-music-section"
+            data-track="assets/audio/02-warm.mp3"
+        >
+
+            <div class="memory-layout reverse">
+
+                <div class="media-card video-card reveal">
+
+                    <video
+                        class="story-video"
+                        src="assets/videos/03-video-call.mp4"
+                        muted
+                        loop
+                        playsinline
+                        preload="metadata"
+                    ></video>
+
+                </div>
+
+
+                <div class="memory-text reveal">
+
+                    <span class="chapter-number">
+                        04
+                    </span>
+
+                    <p class="eyebrow">
+                        A Familiar Face
+                    </p>
+
+                    <h2>
+                        Somehow conversations
+                        became their own place.
+                    </h2>
+
+                    <p>
+
+                        Delhi gave us calls,
+                        video calls, wandering
+                        from shop to shop,
+                        looking for something
+                        good to eat...
+
+                    </p>
+
+                    <p>
+
+                        shawarma,
+                        kebab rolls,
+                        momos,
+                        mango shakes...
+
+                    </p>
+
+                    <p>
+
+                        Small things.
+
+                        Completely ordinary things.
+
+                    </p>
+
+                    <p class="highlight-text">
+
+                        But a normal day has
+                        a different colour when
+                        the right person is in it.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             5. LALA BUDDHI
+             PHOTO
+        ====================================== -->
+
+        <section
+            class="memory-section story-music-section"
+            data-track="assets/audio/02-warm.mp3"
+        >
+
+            <div class="memory-layout">
+
+                <div class="media-card reveal">
+
+                    <img
+                        src="assets/images/02-presentation.jpg"
+                        alt="Her giving a presentation"
+                    >
+
+                </div>
+
+
+                <div class="memory-text reveal">
+
+                    <span class="chapter-number">
+                        05
+                    </span>
+
+                    <p class="eyebrow">
+                        The Lala Buddhi
+                    </p>
+
+                    <h2>
+                        Beauty was never
+                        your only dangerous feature.
+                    </h2>
+
+                    <p>
+
+                        Then there is the
+                        famous Shrivastava
+                        <strong>Lala Buddhi.</strong>
+
+                    </p>
+
+                    <p>
+
+                        Sharp.
+                        Curious.
+                        Difficult to fool.
+                        Very capable of forming
+                        your own opinion.
+
+                    </p>
+
+                    <p>
+
+                        You are one of those
+                        people around whom others
+                        think twice before saying
+                        something completely
+                        <em>ulta-pulta.</em>
+
+                    </p>
+
+                    <p class="highlight-text">
+
+                        Never make yourself
+                        smaller just to make
+                        somebody else comfortable.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             6. FREE BIRD
+             VIDEO
+        ====================================== -->
+
+        <section
+            class="memory-section alternate free-bird-section story-music-section"
+            data-track="assets/audio/03-free.mp3"
+        >
+
+            <div class="memory-layout reverse">
+
+                <div class="media-card video-card reveal">
+
+                    <video
+                        class="story-video"
+                        src="assets/videos/01-free-bird-walk.mp4"
+                        muted
+                        loop
+                        playsinline
+                        preload="metadata"
+                    ></video>
+
+                </div>
+
+
+                <div class="memory-text reveal">
+
+                    <span class="chapter-number">
+                        06
+                    </span>
+
+                    <p class="eyebrow">
+                        Free Bird
+                    </p>
+
+                    <h2>
+                        There has never been
+                        a cage made for you.
+                    </h2>
+
+                    <p>
+
+                        Of all the things that
+                        make you who you are,
+                        this may be one of
+                        the biggest.
+
+                    </p>
+
+                    <p class="highlight-text">
+                        You are your own person.
+                    </p>
+
+                    <p>
+
+                        You need room to think,
+                        choose, explore,
+                        change your mind,
+                        make mistakes,
+                        laugh and follow
+                        your curiosity.
+
+                    </p>
+
+                    <p>
+
+                        You were never meant
+                        to fit inside somebody
+                        else's definition of
+                        who you should be.
+
+                    </p>
+
+                    <p class="highlight-text">
+                        Keep flying.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             7. SHIMLA
+             PHOTO
+        ====================================== -->
+
+        <section
+            class="memory-section story-music-section"
+            data-track="assets/audio/03-free.mp3"
+        >
+
+            <div class="memory-layout">
+
+                <div class="media-card reveal">
+
+                    <img
+                        src="assets/images/05-shimla.jpg"
+                        alt="Mountain memory"
+                    >
+
+                </div>
+
+
+                <div class="memory-text reveal">
+
+                    <span class="chapter-number">
+                        07
+                    </span>
+
+                    <p class="eyebrow">
+                        Open Skies
+                    </p>
+
+                    <h2>
+                        Some people simply
+                        look right beneath
+                        an open sky.
+                    </h2>
+
+                    <p>
+
+                        Maybe because freedom
+                        suits you.
+
+                    </p>
+
+                    <p>
+
+                        Maybe because places
+                        feel more alive when
+                        you're curious enough
+                        to actually experience them.
+
+                    </p>
+
+                    <p class="highlight-text">
+
+                        The best version of you
+                        has always been the one
+                        that gets to be free.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             8. SCOOTY / NIGHT RIDE
+             VIDEO
+        ====================================== -->
+
+        <section
+            class="memory-section alternate story-music-section"
+            data-track="assets/audio/04-memories.mp3"
+        >
+
+            <div class="memory-layout reverse">
+
+                <div class="media-card video-card reveal">
+
+                    <video
+                        class="story-video"
+                        src="assets/videos/02-night-ride.mp4"
+                        muted
+                        loop
+                        playsinline
+                        preload="metadata"
+                    ></video>
+
+                </div>
+
+
+                <div class="memory-text reveal">
+
+                    <span class="chapter-number">
+                        08
+                    </span>
+
+                    <p class="eyebrow">
+                        Ordinary Days
+                    </p>
+
+                    <h2>
+                        You have a habit of
+                        making normal days
+                        worth remembering.
+                    </h2>
+
+                    <p>
+
+                        College.
+
+                        Scooty rides.
+
+                        Roads.
+
+                        Conversations.
+
+                        Completely ordinary
+                        evenings.
+
+                    </p>
+
+                    <p>
+
+                        None of these things
+                        should sound extraordinary.
+
+                    </p>
+
+                    <p class="highlight-text">
+
+                        Yet somehow places
+                        become memories
+                        because you were there.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             9. COURAGE
+             PHOTO
+        ====================================== -->
+
+        <section
+            class="memory-section story-music-section"
+            data-track="assets/audio/04-memories.mp3"
+        >
+
+            <div class="memory-layout">
+
+                <div class="media-card reveal">
+
+                    <img
+                        src="assets/images/04-lab-smile.jpg"
+                        alt="Her smiling in the laboratory"
+                    >
+
+                </div>
+
+
+                <div class="memory-text reveal">
+
+                    <span class="chapter-number">
+                        09
+                    </span>
+
+                    <p class="eyebrow">
+                        The Courage You Give
+                    </p>
+
+                    <h2>
+                        Sometimes courage
+                        doesn't arrive as
+                        a speech.
+                    </h2>
+
+                    <p>
+
+                        Sometimes it is simply
+                        one person saying:
+
+                    </p>
+
+                    <p class="large-quote">
+                        “Try.”
+                    </p>
+
+                    <p>
+
+                        And somehow making you
+                        believe that maybe
+                        you actually can.
+
+                    </p>
+
+                    <p>
+
+                        You have been that person
+                        more times than you
+                        probably realise.
+
+                    </p>
+
+                    <p class="highlight-text">
+
+                        I hope life gives
+                        that same courage
+                        back to you whenever
+                        you need it.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             10. CONFIDENCE
+             PHOTO
+        ====================================== -->
+
+        <section
+            class="memory-section alternate story-music-section"
+            data-track="assets/audio/04-memories.mp3"
+        >
+
+            <div class="memory-layout reverse">
+
+                <div class="media-card reveal">
+
+                    <img
+                        src="assets/images/06-confident.jpg"
+                        alt="Confident portrait"
+                    >
+
+                </div>
+
+
+                <div class="memory-text reveal">
+
+                    <span class="chapter-number">
+                        10
+                    </span>
+
+                    <p class="eyebrow">
+                        Entirely Your Own
+                    </p>
+
+                    <h2>
+                        Strong doesn't have
+                        to mean loud.
+                    </h2>
+
+                    <p>
+
+                        Sometimes it is simply
+                        knowing where you stand.
+
+                    </p>
+
+                    <p>
+
+                        Knowing what you believe.
+
+                    </p>
+
+                    <p>
+
+                        Knowing when to speak.
+
+                    </p>
+
+                    <p>
+
+                        And knowing when somebody
+                        is talking complete nonsense.
+
+                    </p>
+
+                    <p class="highlight-text">
+
+                        Stay difficult to
+                        underestimate.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             11. DISTANCE
+             PHOTO
+        ====================================== -->
+
+        <section
+            class="memory-section story-music-section"
+            data-track="assets/audio/04-memories.mp3"
+        >
+
+            <div class="memory-layout">
+
+                <div class="media-card reveal">
+
+                    <img
+                        src="assets/images/01-night-smile.jpg"
+                        alt="A warm smiling portrait"
+                    >
+
+                </div>
+
+
+                <div class="memory-text reveal">
+
+                    <span class="chapter-number">
+                        11
+                    </span>
+
+                    <p class="eyebrow">
+                        Just Geography
+                    </p>
+
+                    <h2>
+                        Life keeps changing
+                        the map.
+                    </h2>
+
+                    <p>
+
+                        Gwalior.
+
+                        Delhi.
+
+                        Kolkata.
+
+                        Agartala.
+
+                    </p>
+
+                    <p>
+
+                        Distances grow,
+                        schedules change,
+                        and life continues
+                        moving.
+
+                    </p>
+
+                    <p class="highlight-text">
+
+                        But distance can change
+                        where someone is.
+
+                        It cannot change
+                        what their existence
+                        adds to your life.
+
+                    </p>
+
+                    <p>
+
+                        And yours has added
+                        courage, laughter,
+                        ideas, memories
+                        and a lot more colour.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             FINAL BIRTHDAY SECTION
+        ====================================== -->
+
+        <section
+            id="finaleSection"
+            class="finale-section story-music-section"
+            data-track="assets/audio/05-finale.mp3"
+        >
+
+            <div class="finale-background">
+
+                <img
+                    src="assets/images/07-night-portrait.jpg"
+                    alt="Favourite birthday portrait"
+                >
+
+            </div>
+
+
+            <div class="finale-overlay"></div>
+
+
+            <div class="finale-content reveal">
+
+                <p class="eyebrow light-eyebrow">
+                    So today...
+                </p>
+
+                <h2>
+                    This isn't about
+                    our story.
+                </h2>
+
+                <h3>
+                    It's about you.
+                </h3>
+
+
+                <div class="final-lines">
+
+                    <p>
+                        The girl with
+                        unforgettable eyes.
+                    </p>
+
+                    <p>
+                        That wonderfully
+                        soothing smile.
+                    </p>
+
+                    <p>
+                        The famous
+                        Lala Buddhi.
+                    </p>
+
+                    <p>
+                        The courage.
+                    </p>
+
+                    <p>
+                        The independence.
+                    </p>
+
+                    <p>
+                        The mind that refuses
+                        to accept everything
+                        it is told.
+                    </p>
+
+                    <p>
+                        And that wonderfully
+                        untameable spirit.
+                    </p>
+
+                </div>
+
+
+                <div class="birthday-wish">
+
+                    <h2>
+                        Happy Birthday.
+                    </h2>
+
+                    <p>
+
+                        I hope this year gives you
+                        bigger spaces to grow,
+                        work that excites your mind,
+                        people who respect your freedom,
+                        adventures you haven't planned yet,
+                        and countless reasons
+                        for that smile to appear.
+
+                    </p>
+
+                    <p class="final-command">
+                        Keep learning.
+                    </p>
+
+                    <p class="final-command">
+                        Keep questioning.
+                    </p>
+
+                    <p class="final-command">
+                        Keep laughing.
+                    </p>
+
+                    <p class="final-command">
+                        Keep flying.
+                    </p>
+
+                </div>
+
+
+                <h2 class="free-bird-final">
+                    Happy Birthday,
+                    Free Bird. ✨
+                </h2>
+
+
+                <button
+                    id="celebrateButton"
+                    class="celebrate-button"
+                >
+                    One last little thing 🎉
+                </button>
+
+
+                <button
+                    id="restartStoryButton"
+                    class="restart-button"
+                >
+                    Replay the story
+                </button>
+
+            </div>
+
+
+            <div
+                id="confettiContainer"
+                class="confetti-container"
+            ></div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <script src="js/script.js"></script>
+
+
+</body>
+
+</html>
